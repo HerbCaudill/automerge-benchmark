@@ -1,4 +1,4 @@
-# Automerge: simple profiling spikes
+# Automerge: simple profiling spike
 
 ## N push() operations
 
