@@ -7,53 +7,52 @@ const uuid = require('uuid')
 const record = {
   first: 'Herb',
   last: 'Caudill',
-  email: 'herb@devresults.com',
-  company: 'DevResults',
-  address: {
-    street: 'Carrer de València',
-    houseNumber: '293',
-    floor: 3,
-    door: 2,
-    postalCode: '08009',
-    city: 'Barcelona',
-    country: 'es',
-  },
 }
 
-function profileNumInserts(N) {
-  let start
-  let doc = Automerge.from({
-    list: [],
-    map: {},
+let doc = Automerge.from({
+  list: [],
+  map: {},
+})
+
+const benchmark = (fn, iterations) => {
+  console.log()
+  console.log(fn.name)
+  console.log('----------------')
+  iterations.forEach(N => {
+    doc = Automerge.from({
+      list: [],
+      map: {},
+    })
+
+    const start = new Date()
+
+    fn(N)
+    const time = new Date() - start
+    const timePerRecord = Math.floor(time / N)
+    console.log({ N, time, timePerRecord })
   })
+  console.log('\n')
+}
 
-  console.log(`Inserting ${N} records`)
-
-  start = new Date()
+const insertAndMap = N => {
   for (let i = 0; i < N; i++) {
     const id = uuid()
     const r = { id, ...record }
-    doc = Automerge.change(doc, `${i}`, doc => {
-      doc.list.push(id)
-      doc.map[id] = r
+    doc = Automerge.change(doc, `${i}`, d => {
+      d.list.push(id)
+      d.map[id] = r
     })
   }
-
-  const duration = new Date() - start
-  const durationPerRecord = Math.round(duration / N, 1)
-  const docinspection = util.inspect(doc, { showHidden: true, maxArrayLength: null })
-  const docSize = Math.floor(docinspection.length / 1024)
-  const docSizePerRecord = Math.floor(docinspection.length / N)
-
-  console.log(`Took: ${duration} ms (${durationPerRecord} ms/record)`)
-  console.log(`Size of doc: ${docSize} Kb (${docSizePerRecord} B/record)`)
-
-  console.log('\n---\n')
 }
+benchmark(insertAndMap, [100, 500, 1000, 2000, 3000])
 
-profileNumInserts(100)
-profileNumInserts(200)
-profileNumInserts(500)
-profileNumInserts(1000)
-profileNumInserts(2000)
-profileNumInserts(4000)
+const insertOnly = N => {
+  for (let i = 0; i < N; i++) {
+    const id = uuid()
+    const r = { id, ...record }
+    doc = Automerge.change(doc, `${i}`, d => {
+      d.list.push(id)
+    })
+  }
+}
+benchmark(insertOnly, [1000, 2000, 3000, 4000])
