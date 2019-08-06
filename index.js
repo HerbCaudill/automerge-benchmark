@@ -26,7 +26,7 @@ const benchmark = (fn, iterations) => {
     try {
       fn(N, doc)
       const time = new Date() - start
-      const timePerRecord = Math.floor(time / N)
+      const timePerRecord = Math.floor((time * 10) / N) / 10
       console.log({ N, time, timePerRecord })
     } catch (err) {
       console.log({ N, err: err.toString().split('\n')[0] })
