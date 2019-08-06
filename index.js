@@ -35,45 +35,45 @@ const benchmark = (fn, iterations) => {
   console.log('\n')
 }
 
-benchmark(
-  function insertAndMap(N, doc) {
-    for (let i = 0; i < N; i++) {
-      const id = uuid()
-      const r = { id, ...record }
-      doc = Automerge.change(doc, `${i}`, d => {
-        d.list.push(id)
-        d.map[id] = r
-      })
-    }
-  },
-  [100, 500, 1000, 2000, 4000, 10000]
-)
+// benchmark(
+//   function insertAndMap(N, doc) {
+//     for (let i = 0; i < N; i++) {
+//       const id = uuid()
+//       const r = { id, ...record }
+//       doc = Automerge.change(doc, `${i}`, d => {
+//         d.list.push(id)
+//         d.map[id] = r
+//       })
+//     }
+//   },
+//   [100, 500, 1000, 2000, 4000, 10000]
+// )
 
-benchmark(
-  function mapOnly(N, doc) {
-    for (let i = 0; i < N; i++) {
-      const id = uuid()
-      const r = { id, ...record }
-      doc = Automerge.change(doc, `${i}`, d => {
-        d.map[id] = r
-      })
-    }
-  },
-  [100, 500, 1000, 2000, 4000, 10000]
-)
+// benchmark(
+//   function mapOnly(N, doc) {
+//     for (let i = 0; i < N; i++) {
+//       const id = uuid()
+//       const r = { id, ...record }
+//       doc = Automerge.change(doc, `${i}`, d => {
+//         d.map[id] = r
+//       })
+//     }
+//   },
+//   [100, 500, 1000, 2000, 4000, 10000]
+// )
 
-benchmark(
-  function insertOnly(N, doc) {
-    for (let i = 0; i < N; i++) {
-      const id = uuid()
-      const r = { id, ...record }
-      doc = Automerge.change(doc, `${i}`, d => {
-        d.list.push(r)
-      })
-    }
-  },
-  [1000, 10000, 20000, 40000, 100000]
-)
+// benchmark(
+//   function insertOnly(N, doc) {
+//     for (let i = 0; i < N; i++) {
+//       const id = uuid()
+//       const r = { id, ...record }
+//       doc = Automerge.change(doc, `${i}`, d => {
+//         d.list.push(r)
+//       })
+//     }
+//   },
+//   [1000, 10000, 20000, 40000, 100000]
+// )
 
 benchmark(
   function insertAndMapOnce(N, doc) {
@@ -87,28 +87,28 @@ benchmark(
     }
     doc = Automerge.from({ list, map })
   },
-  [1000, 2000, 4000, 10000, 20000, 40000]
+  [20895, 20896, 20897, 20898, 20899, 20890]
 )
 
-benchmark(
-  function insertAndMapInBatches(N, doc) {
-    const list = []
-    const map = {}
-    const batchSize = 7777
-    let t = 0
-    while (t < N) {
-      for (let i = 0; i < batchSize && t < N; i++) {
-        const id = uuid()
-        const r = { id, ...record }
-        list.push(id)
-        map[id] = r
-        t += 1
-      }
-      doc = Automerge.change(doc, d => {
-        d.list = [...d.list, ...list]
-        d.map = { ...d.map, ...map }
-      })
-    }
-  },
-  [100, 1000, 5000, 10000, 20000, 40000]
-)
+// benchmark(
+//   function insertAndMapInBatches(N, doc) {
+//     const list = []
+//     const map = {}
+//     const batchSize = 7777
+//     let t = 0
+//     while (t < N) {
+//       for (let i = 0; i < batchSize && t < N; i++) {
+//         const id = uuid()
+//         const r = { id, ...record }
+//         list.push(id)
+//         map[id] = r
+//         t += 1
+//       }
+//       doc = Automerge.change(doc, d => {
+//         d.list = [...d.list, ...list]
+//         d.map = { ...d.map, ...map }
+//       })
+//     }
+//   },
+//   [100, 1000, 5000, 10000, 20000, 40000]
+// )
