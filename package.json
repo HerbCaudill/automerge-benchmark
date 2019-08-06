@@ -1,15 +1,15 @@
 {
-  "name": "automerge-simple-profiling-spike",
-  "version": "1.0.0",
-  "description": "",
+  "name": "automerge-benchmark",
+  "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "keywords": [],
   "author": "Aral Balkan",
   "license": "MIT",
   "dependencies": {
-    "automerge": "^0.7.7"
+    "automerge": "0",
+    "benchmark": "^2.1.4",
+    "uuid": "^3.3.2"
   }
 }
