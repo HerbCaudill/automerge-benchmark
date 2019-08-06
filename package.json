@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "watch": "nodemon index.js"
   },
-  "author": "Aral Balkan",
+  "author": "Herb Caudill",
   "license": "MIT",
   "dependencies": {
     "automerge": "0",
-    "benchmark": "^2.1.4",
-    "uuid": "^3.3.2"
+    "nodemon": "1",
+    "uuid": "3"
   }
 }
