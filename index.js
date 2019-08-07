@@ -1,7 +1,7 @@
 const { benchmark } = require('./benchmark')
 
 const util = require('util')
-const Automerge = require('automerge')
+const A = require('automerge')
 const uuid = require('uuid')
 
 const record = { first: 'Herb', last: 'Caudill' }
@@ -34,7 +34,7 @@ function insertAndMap(N, doc) {
   for (let i = 0; i < N; i++) {
     const id = uuid()
     const r = { id, ...record }
-    doc = Automerge.change(doc, `${i}`, d => {
+    doc = A.change(doc, `${i}`, d => {
       d.list.push(id)
       d.map[id] = r
     })
@@ -57,7 +57,7 @@ function mapOnly(N, doc) {
   for (let i = 0; i < N; i++) {
     const id = uuid()
     const r = { id, ...record }
-    doc = Automerge.change(doc, `${i}`, d => {
+    doc = A.change(doc, `${i}`, d => {
       d.map[id] = r
     })
   }
@@ -79,7 +79,7 @@ function insertOnly(N, doc) {
   for (let i = 0; i < N; i++) {
     const id = uuid()
     const r = { id, ...record }
-    doc = Automerge.change(doc, `${i}`, d => {
+    doc = A.change(doc, `${i}`, d => {
       d.list.push(r)
     })
   }
@@ -105,7 +105,7 @@ function insertAndMapOnce(N, doc) {
     list.push(id)
     map[id] = r
   }
-  doc = Automerge.from({ list, map })
+  doc = A.from({ list, map })
 }
 
 /**
@@ -129,9 +129,9 @@ function insertAndMapTwice(N, doc) {
     list.push(id)
     map[id] = r
   }
-  doc = Automerge.from({ list, map })
-  doc = Automerge.change(doc, d => ({ list: [], map: {} }))
-  doc = Automerge.change(doc, d => ({ list, map }))
+  doc = A.from({ list, map })
+  doc = A.change(doc, d => ({ list: [], map: {} }))
+  doc = A.change(doc, d => ({ list, map }))
 }
 
 /**
@@ -157,7 +157,7 @@ function insertAndMapInBatches(N, doc) {
       map[id] = r
       t += 1
     }
-    doc = Automerge.change(doc, d => {
+    doc = A.change(doc, d => {
       d.list = [...d.list, ...list]
       d.map = { ...d.map, ...map }
     })
@@ -169,11 +169,11 @@ function insertAndMapInBatches(N, doc) {
  *
  * Results: http://docs.google.com/spreadsheets/d/1tOJDy9f0MFoD1L1GUZVh9G74UVkqto88q48EwMBrCC8/edit#gid=0
  */
-function timeContinuousInsertionBatches(N, doc = Automerge.from({ list: [] })) {
+function timeContinuousInsertionBatches(N, doc = A.from({ list: [] })) {
   const batch = 1000
   let start = new Date()
   for (let i = 0; i < N; i++) {
-    doc = Automerge.change(doc, `${i}`, d => d.list.push(i))
+    doc = A.change(doc, `${i}`, d => d.list.push(i))
     if (i > 0 && i % batch === 0) {
       const time = new Date() - start
       console.log({ size: i - batch, time })
@@ -187,12 +187,12 @@ function timeContinuousInsertionBatches(N, doc = Automerge.from({ list: [] })) {
  *
  * Results: https://docs.google.com/spreadsheets/d/1tOJDy9f0MFoD1L1GUZVh9G74UVkqto88q48EwMBrCC8/edit#gid=440903324
  */
-function timeChunkedInsertionBatches(N, doc = Automerge.from({ list: [] })) {
+function timeChunkedInsertionBatches(N, doc = A.from({ list: [] })) {
   const batch = 1000
   for (let i = 0; i < N; i++) {
     let start = new Date()
     const time = new Date() - start
-    doc = Automerge.change(doc, s => {
+    doc = A.change(doc, s => {
       const newIds = Array(batch)
         .fill(0)
         .map((d, j) => i * batch + j)
