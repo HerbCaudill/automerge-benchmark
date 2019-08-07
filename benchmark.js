@@ -1,10 +1,10 @@
-﻿const Automerge = require('automerge')
+﻿const A = require('automerge')
 const benchmark = (fn, iterations) => {
   console.log()
   console.log(fn.name)
   console.log(''.padStart(fn.name.length, '-'))
   iterations.forEach(N => {
-    doc = Automerge.from({
+    doc = A.from({
       list: [],
       map: {},
     })
